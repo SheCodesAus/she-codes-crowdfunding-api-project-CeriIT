@@ -18,17 +18,23 @@ class ProjectSerializer(serializers.Serializer):
         return Project.objects.create(**validated_data)
 
 
-class PledgeSerializer(serializers.Serializer):
-    id = serializers.ReadOnlyField()
-    amount = serializers.IntegerField()
-    comment = serializers.CharField(max_length=200)
-    anonymous = serializers.BooleanField()
-    supporter = serializers.CharField(max_length=200)
-    project_id = serializers.IntegerField()
+# class PledgeSerializer(serializers.Serializer):
+#     id = serializers.ReadOnlyField()
+#     amount = serializers.IntegerField()
+#     comment = serializers.CharField(max_length=200)
+#     anonymous = serializers.BooleanField()
+#     supporter = serializers.CharField(max_length=200)
+#     project_id = serializers.IntegerField()
 
-    def create(self, validated_data):
-        return Pledge.objects.create(**validated_data)
+#     def create(self, validated_data):
+#         return Pledge.objects.create(**validated_data)
 
+class PledgeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pledge
+        fields = ['id', 'amount', 'comment', 'anonymous', 'project', 'supporter']
+        read_only_fields = ['id', 'supporter']
+    
 class ProjectDetailSerializer(ProjectSerializer):
     pledges = PledgeSerializer(many=True, read_only=True)
 
